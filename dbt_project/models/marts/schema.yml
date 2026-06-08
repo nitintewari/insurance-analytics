@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: dim_agents
+    description: >
+      Agent dimension table. One row per agent enriched with lifetime
+      policy and commission performance metrics. Use as a lookup in all
+      agent-level reporting.
+    columns:
+      - name: agent_id
+        description: "Primary key"
+        tests: [unique, not_null]
+      - name: tier
+        tests:
+          - accepted_values:
+              values: ['bronze', 'silver', 'gold', 'platinum']
+      - name: cancellation_rate_pct
+        description: "% of agent's policies that have been cancelled"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+
+  - name: fct_payments
+    description: >
+      Core payments fact. One row per monthly premium billing event.
+      Drives revenue, collection rate, and commission KPIs.
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+      - name: payment_status
+        tests:
+          - accepted_values:
+              values: ['paid', 'paid_late', 'failed']
+      - name: collection_status
+        tests:
+          - accepted_values:
+              values: ['collected_on_time', 'collected_late', 'uncollected']
+      - name: commission_earned
+        description: "Commission earned. Zero for failed payments."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: fct_member_churn
+    description: >
+      Member churn fact. One row per cancellation event.
+      Powers the retention and churn-reason dashboards.
+    columns:
+      - name: cancellation_id
+        tests: [unique, not_null]
+      - name: churn_type
+        tests:
+          - accepted_values:
+              values: ['voluntary', 'involuntary']
+      - name: months_active
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: agent_commission_summary
+    description: >
+      Monthly agent commission reconciliation. One row per agent per month.
+      Reconciles amounts due vs collected, commissions earned, and churn impact.
+    columns:
+      - name: collection_rate_pct
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+      - name: failure_rate_pct
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100

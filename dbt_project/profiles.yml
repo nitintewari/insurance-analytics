@@ -1,0 +1,26 @@
+# profiles.yml — place this in ~/.dbt/profiles.yml (NOT inside your project folder)
+# Replace <your-gcp-project-id> and <your-dataset> with your actual values.
+
+ncd_insurance_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth                    # uses `gcloud auth application-default login`
+      project: insurance-analytics-498723
+      dataset: ncd_dev                 # BigQuery dataset for dev runs
+      threads: 4
+      timeout_seconds: 300
+      location: US
+      priority: interactive
+
+    prod:
+      type: bigquery
+      method: service-account
+      project: insurance-analytics-498723
+      dataset: ncd_prod
+      keyfile: /path/to/service-account-key.json
+      threads: 4
+      timeout_seconds: 300
+      location: US
+      priority: batch

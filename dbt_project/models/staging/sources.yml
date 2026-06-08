@@ -1,0 +1,86 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw seed data loaded via dbt seeds — simulates Fivetran-fed source tables"
+    schema: "{{ target.schema }}_raw"
+    tables:
+      - name: agents
+        description: "Insurance agents who sell NCD dental/vision policies"
+        columns:
+          - name: agent_id
+            description: "Primary key"
+            tests: [unique, not_null]
+          - name: agent_name
+            tests: [not_null]
+          - name: tier
+            tests:
+              - accepted_values:
+                  values: ['bronze', 'silver', 'gold', 'platinum']
+
+      - name: members
+        description: "Enrolled members / policyholders"
+        columns:
+          - name: member_id
+            tests: [unique, not_null]
+          - name: agent_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'agents')
+                  field: agent_id
+          - name: plan_type
+            tests:
+              - accepted_values:
+                  values: ['Dental Basic', 'Dental Premium', 'Vision Basic', 'Vision Premium', 'Dental+Vision Bundle']
+
+      - name: policies
+        description: "One policy per member enrollment"
+        columns:
+          - name: policy_id
+            tests: [unique, not_null]
+          - name: member_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'members')
+                  field: member_id
+          - name: status
+            tests:
+              - accepted_values:
+                  values: ['active', 'cancelled', 'expired', 'pending']
+          - name: monthly_premium
+            tests: [not_null]
+
+      - name: payments
+        description: "Monthly premium payment records"
+        columns:
+          - name: payment_id
+            tests: [unique, not_null]
+          - name: policy_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'policies')
+                  field: policy_id
+          - name: payment_status
+            tests:
+              - accepted_values:
+                  values: ['paid', 'paid_late', 'failed']
+
+      - name: cancellations
+        description: "Policy cancellation records with reason codes"
+        columns:
+          - name: cancellation_id
+            tests: [unique, not_null]
+          - name: policy_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw', 'policies')
+                  field: policy_id
+          - name: cancellation_reason
+            tests:
+              - accepted_values:
+                  values: ['non_payment', 'member_request', 'employer_change',
+                           'moved_out_of_area', 'plan_upgrade', 'deceased']
