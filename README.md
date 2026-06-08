@@ -70,9 +70,9 @@ MARTS LAYER (tables — business-ready, join-ready)
 ## Project Structure
 
 ```
-ncd_insurance_analytics/
+insurance_analytics/
 ├── data_generation/
-│   └── generate_data.py          Synthetic data generator (5 tables, ~60K rows)
+│   └── generate_data.py          
 ├── dbt_project/
 │   ├── dbt_project.yml
 │   ├── profiles.yml               BigQuery connection config
