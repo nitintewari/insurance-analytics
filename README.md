@@ -144,6 +144,11 @@ dbt tests are defined in `sources.yml` and `schema.yml`:
 Custom test: `assert_no_negative_commission.sql` — validates no payment row has negative commission.
 
 ---
+## Pipeline Lineage
+
+![dbt Lineage Graph](images/lineage_graph.png)
+
+![BigQuery Results](images/bigquery_results.png)
 
 ## Dashboard Pages (Power BI)
 
@@ -151,17 +156,21 @@ Custom test: `assert_no_negative_commission.sql` — validates no payment row ha
 - Total active members, monthly revenue billed vs. collected, collection rate trend
 - Carrier revenue split (MetLife / VSP / Zurich)
 - YTD commissions paid
+![Executive KPIs](images/dashboard_executive.png)
+
 
 **Page 2 — Agent Performance**
 - Top agents by commission (bar chart)
 - Agent tier vs. collection rate scatter
 - High-churn agents flagged in red
+![Agent Performance](images/dashboard_agents.png)
 
 **Page 3 — Member Churn Funnel**
 - Churn by reason (waterfall: voluntary vs. involuntary)
 - Churn rate by plan type
 - Early cancel % trend
 - Churn risk heatmap by state
+![Member Churn](images/dashboard_churn.png)
 
 ---
 
