@@ -1,6 +1,6 @@
-# NCD Insurance Operations Analytics
+# Insurance Operations Analytics
 
-An end-to-end analytics pipeline simulating the operational data environment of a dental and vision insurance provider. Built with **BigQuery**, **dbt**, and **Power BI**, this project models the core data workflows an analyst would own at a Insurance company : member eligibility, agent commissions, payment collection, and member churn.
+An end-to-end analytics pipeline simulating the operational data environment of a insurance provider. Built with **BigQuery**, **dbt**, and **Power BI**, this project models the core data workflows an analyst would own at a Insurance company : member eligibility, agent commissions, payment collection, and member churn.
 
 ---
 
@@ -175,4 +175,4 @@ Custom test: `assert_no_negative_commission.sql` — validates no payment row ha
 
 ---
 
-*Built by Nitin Tewari — targeting NCD Data Analyst role | [LinkedIn](https://linkedin.com/in/nitintewari39) | [GitHub](https://github.com/nitintewari39)*
+*Built by Nitin Tewari — targeting Data Analyst role | [LinkedIn](https://linkedin.com/in/nitintewari39) | [GitHub](https://github.com/nitintewari39)*
